@@ -30,25 +30,6 @@ jobs:
             rid: win-arm64
             exe: true
 
-          # ================= macOS =================
-          - os: ubuntu-latest
-            rid: osx-x64
-            exe: false
-          - os: ubuntu-latest
-            rid: osx-arm64
-            exe: false
-
-          # ================= Linux =================
-          - os: ubuntu-latest
-            rid: linux-x64
-            exe: false
-          - os: ubuntu-latest
-            rid: linux-arm
-            exe: false
-          - os: ubuntu-latest
-            rid: linux-arm64
-            exe: false
-
         self:
           - true
           - false
