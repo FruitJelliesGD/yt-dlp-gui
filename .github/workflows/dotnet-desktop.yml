@@ -36,7 +36,7 @@ jobs:
         run: |
           Rename-Item `
             publish/framework/yt-dlp-gui.exe `
-            yt-dlp-gui-framework.exe
+            yt-dlp-gui-win-x64-framework.exe
 
       # =========================
       # 2️⃣ Self-contained 版本（自带运行时）
@@ -64,5 +64,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            yt-dlp-gui-framework.exe
-            yt-dlp-gui-win-x64.exe
+            publish/framework/yt-dlp-gui-win-x64-framework.exe
+            publish/self-contained/yt-dlp-gui-win-x64-self-contained.exe
+
