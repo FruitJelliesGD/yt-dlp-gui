@@ -46,7 +46,7 @@
 
 ## 📸 界面预览
 
-> 深色模式 + 原生控件 + 清晰进度展示
+> 深色模式 + 原生控件 + 进度展示
 
 <img width="1762" height="1091" alt="image" src="https://github.com/user-attachments/assets/1bacfcc3-30f7-4705-bd55-841b0382be4e" />
 
