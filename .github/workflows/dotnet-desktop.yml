@@ -1,9 +1,9 @@
-name: Build & Release (Windows)
+name: Release Windows
 
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 permissions:
   contents: write
@@ -15,60 +15,54 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: "10.0.x"
 
-      - name: Restore
-        run: dotnet restore
+      # =========================
+      # 1️⃣ Framework-dependent 版本（<1MB）
+      # =========================
+      - name: Publish framework-dependent exe
+        run: |
+          dotnet publish yt-dlp-gui.csproj `
+            -c Release `
+            -o publish/framework `
+            -p:PublishSingleFile=true `
+            -p:UseAppHost=true
 
-      # ===============================
-      # Self-contained = true
-      # ===============================
-      - name: Publish (self-contained)
+      - name: Rename framework exe
+        run: |
+          Rename-Item `
+            publish/framework/yt-dlp-gui.exe `
+            yt-dlp-gui-framework.exe
+
+      # =========================
+      # 2️⃣ Self-contained 版本（自带运行时）
+      # =========================
+      - name: Publish self-contained exe
         run: |
           dotnet publish yt-dlp-gui.csproj `
             -c Release `
             -r win-x64 `
             --self-contained true `
+            -o publish/self-contained `
             -p:PublishSingleFile=true `
-            -p:EnableWindowsTargeting=true `
-            -o publish/self-contained
+            -p:UseAppHost=true
 
-      # ===============================
-      # Self-contained = false
-      # ===============================
-      - name: Publish (framework-dependent)
+      - name: Rename self-contained exe
         run: |
-          dotnet publish yt-dlp-gui.csproj `
-            -c Release `
-            -r win-x64 `
-            --self-contained false `
-            -p:PublishSingleFile=true `
-            -p:EnableWindowsTargeting=true `
-            -o publish/framework
+          Rename-Item `
+            publish/self-contained/yt-dlp-gui.exe `
+            yt-dlp-gui-win-x64.exe
 
-      # ===============================
-      # Rename outputs (no zip)
-      # ===============================
-      - name: Rename executables
-        run: |
-          Rename-Item publish/self-contained/yt-dlp-gui.exe yt-dlp-gui-win-x64-self-contained.exe
-          Rename-Item publish/framework/yt-dlp-gui.exe yt-dlp-gui-win-x64-framework.exe
-
-      # ===============================
-      # Create GitHub Release
-      # ===============================
+      # =========================
+      # 3️⃣ Create GitHub Release
+      # =========================
       - name: Create Release
         uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            publish/self-contained/yt-dlp-gui-win-x64-self-contained.exe
-            publish/framework/yt-dlp-gui-win-x64-framework.exe
+            yt-dlp-gui-framework.exe
+            yt-dlp-gui-win-x64.exe
