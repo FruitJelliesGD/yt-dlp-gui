@@ -30,7 +30,8 @@ jobs:
             -c Release `
             -o publish/framework `
             -p:PublishSingleFile=true `
-            -p:UseAppHost=true
+            -p:UseAppHost=true `
+            --no-self-contained
 
       - name: Rename framework exe
         run: |
