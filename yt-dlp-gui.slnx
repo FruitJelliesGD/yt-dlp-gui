@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="yt-dlp-gui.csproj" />
+  <Project Path="Tests/yt-dlp-gui.Tests.csproj" />
 </Solution>
