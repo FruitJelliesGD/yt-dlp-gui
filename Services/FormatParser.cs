@@ -40,7 +40,8 @@ namespace yt_dlp_gui.Services
         private FormatInfo? ParseLine(string line)
         {
             // yt-dlp -F output uses pipe separator:
-            // ID  EXT  RESOLUTION  FPS | FILESIZE  PROTO  VCODEC  ACODEC
+            // Full format: ID EXT RESOLUTION FPS HDR CH | FILESIZE TBR PROTO | VCODEC VBR ACODEC ABR ASR MORE INFO
+            // Simplified:  ID EXT RESOLUTION FPS | FILESIZE PROTO VCODEC ACODEC
             var pipeIndex = line.IndexOf('|');
             if (pipeIndex < 0) return null;
 
@@ -48,7 +49,6 @@ namespace yt_dlp_gui.Services
             var rightPart = line[(pipeIndex + 1)..].Trim();
 
             // Left side: ID EXT RESOLUTION FPS
-            // Use regex to extract the tokens
             var leftMatch = Regex.Match(leftPart, @"^(\d+)\s+(\S+)\s+(.+?)\s+(\S+)\s*$");
             if (!leftMatch.Success)
                 return null;
@@ -64,9 +64,11 @@ namespace yt_dlp_gui.Services
                 Extension = extension
             };
 
-            // Right side: FILESIZE PROTO VCODEC ACODEC
+            // Right side: split by 2+ spaces
             var rightTokens = Regex.Split(rightPart, @"\s{2,}");
-            var filesize = rightTokens.Length > 0 ? rightTokens[0] : string.Empty;
+
+            // Detect format: 6+ tokens = full format, 4 tokens = simplified
+            bool isFullFormat = rightTokens.Length >= 6;
 
             var isAudioOnly = resolutionRaw.Contains("audio only", StringComparison.OrdinalIgnoreCase)
                            || resolutionRaw == "audio";
@@ -75,12 +77,22 @@ namespace yt_dlp_gui.Services
             {
                 format.IsAudio = true;
                 format.Resolution = "audio only";
-                // VCODEC column is "audio only", ACODEC is the actual codec
-                if (rightTokens.Length >= 3)
-                    format.AudioCodec = rightTokens[2];
-                else if (rightTokens.Length >= 2)
-                    format.AudioCodec = rightTokens[1];
-                format.AudioBitrate = filesize;
+
+                // Full format columns after pipe: FILESIZE[0] TBR[1] PROTO[2] VCODEC[3] ACODEC[4] ABR[5] ASR[6]
+                // Simplified: FILESIZE[0] PROTO[1] VCODEC[2] ACODEC[3]
+                if (isFullFormat && rightTokens.Length >= 5)
+                {
+                    format.AudioCodec = rightTokens[4]; // ACODEC
+                    if (rightTokens.Length >= 6)
+                        format.AudioBitrate = rightTokens[5]; // ABR
+                    if (rightTokens.Length >= 7)
+                        format.AudioSampleRate = rightTokens[6]; // ASR
+                }
+                else if (rightTokens.Length >= 4)
+                {
+                    format.AudioCodec = rightTokens[3]; // Simplified ACODEC
+                }
+
                 format.Fps = "0";
             }
             else
@@ -93,13 +105,21 @@ namespace yt_dlp_gui.Services
                 if (resMatch.Success)
                     format.Resolution = resMatch.Value;
 
-                var fpsMatch = FpsRegex.Match(line);
-                if (fpsMatch.Success)
-                    format.Fps = fpsMatch.Groups[1].Value + "fps";
+                // fpsRaw already contains the FPS value from the left side
+                // Just ensure it has "fps" suffix
+                format.Fps = fpsRaw.EndsWith("fps") ? fpsRaw : fpsRaw + "fps";
 
-                if (rightTokens.Length >= 3)
-                    format.Codec = rightTokens[2];
-                format.Bitrate = filesize;
+                // VCODEC: Full format index 3, Simplified index 2
+                // Full format columns: FILESIZE[0] TBR[1] PROTO[2] VCODEC[3]
+                // Simplified: FILESIZE[0] PROTO[1] VCODEC[2]
+                if (isFullFormat && rightTokens.Length >= 4)
+                    format.Codec = rightTokens[3]; // Full format VCODEC
+                else if (rightTokens.Length >= 3)
+                    format.Codec = rightTokens[2]; // Simplified VCODEC
+
+                // TBR (total bitrate): Full format index 1
+                if (isFullFormat && rightTokens.Length >= 2)
+                    format.Bitrate = rightTokens[1];
             }
 
             return format;
