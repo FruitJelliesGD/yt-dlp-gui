@@ -321,6 +321,47 @@
                     </Grid>
                 </Grid>
             </TabItem>
+
+            <!-- 自定义参数选项卡 -->
+            <TabItem Header="自定义参数" Background="{StaticResource TabHeaderBg}">
+                <Grid Background="{StaticResource TabContentBg}" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 提示文本 -->
+                    <TextBlock Grid.Row="0" Text="输入自定义yt-dlp参数，多个参数用空格分隔" Margin="0,0,0,10" Foreground="{StaticResource LabelBrush}"/>
+
+                    <!-- 自定义参数输入框 -->
+                    <TextBox Grid.Row="1" x:Name="CustomArgumentsTextBox" 
+                             FontFamily="Consolas, Courier New, monospace"
+                             AcceptsReturn="True" 
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             Margin="0,0,0,10"
+                             ToolTip="例如: --no-check-certificates --geo-bypass"/>
+
+                    <!-- 按钮区域 -->
+                    <Grid Grid.Row="2" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="验证语法" Click="ValidateSyntax_Click" Margin="0,0,10,0" Padding="10,5"/>
+                        <Button Grid.Column="1" Content="清空" Click="ClearArguments_Click" Padding="10,5"/>
+                    </Grid>
+
+                    <!-- 验证结果 -->
+                    <TextBlock Grid.Row="3" x:Name="ValidationResultTextBlock" 
+                               Text="" 
+                               Margin="0,5,0,0"
+                               TextWrapping="Wrap"/>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Border>
 </UserControl>

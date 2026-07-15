@@ -1,6 +1,7 @@
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using yt_dlp_gui.Models;
 
 namespace yt_dlp_gui.Controls
 {
@@ -62,6 +63,9 @@ namespace yt_dlp_gui.Controls
         public string OAuthToken => OAuthTokenTextBox.Text;
         public string TwoFactorAuth => TwoFactorAuthTextBox.Text;
         public string NetrcFilePath => NetrcFilePathTextBox.Text;
+
+        // 自定义参数
+        public string CustomArguments => CustomArgumentsTextBox.Text;
 
         /// <summary>
         /// 生成yt-dlp命令行参数
@@ -156,6 +160,13 @@ namespace yt_dlp_gui.Controls
             if (!string.IsNullOrWhiteSpace(NetrcFilePath))
                 args.Append($" --netrc \"{NetrcFilePath}\"");
 
+            // 自定义参数
+            if (!string.IsNullOrWhiteSpace(CustomArguments))
+            {
+                string customArgs = CustomArguments.Trim();
+                args.Append($" {customArgs}");
+            }
+
             return args.ToString();
         }
 
@@ -170,6 +181,39 @@ namespace yt_dlp_gui.Controls
             {
                 NetrcFilePathTextBox.Text = dialog.FileName;
             }
+        }
+
+        /// <summary>
+        /// 验证自定义参数语法
+        /// </summary>
+        public (bool IsValid, string Message) ValidateSyntax()
+        {
+            string input = CustomArgumentsTextBox.Text?.Trim() ?? string.Empty;
+            return ArgumentsValidator.ValidateSyntax(input);
+        }
+
+        /// <summary>
+        /// 清空自定义参数
+        /// </summary>
+        public void ClearArguments()
+        {
+            CustomArgumentsTextBox.Text = string.Empty;
+            ValidationResultTextBlock.Text = string.Empty;
+            ValidationResultTextBlock.Foreground = System.Windows.Media.Brushes.White;
+        }
+
+        private void ValidateSyntax_Click(object sender, RoutedEventArgs e)
+        {
+            var (isValid, message) = ValidateSyntax();
+            ValidationResultTextBlock.Text = message;
+            ValidationResultTextBlock.Foreground = isValid
+                ? System.Windows.Media.Brushes.LightGreen
+                : System.Windows.Media.Brushes.OrangeRed;
+        }
+
+        private void ClearArguments_Click(object sender, RoutedEventArgs e)
+        {
+            ClearArguments();
         }
     }
 }
