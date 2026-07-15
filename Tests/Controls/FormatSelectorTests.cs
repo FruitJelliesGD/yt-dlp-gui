@@ -152,5 +152,60 @@ namespace yt_dlp_gui.Tests.Controls
 
             Assert.AreEqual(0, selector.Formats.Count);
         }
+
+        [TestMethod]
+        public void UpdateFormats_FullFormatWithTwoPipes_UpdatesFormatList()
+        {
+            var selector = new FormatSelector();
+            var output = @"ID  EXT   RESOLUTION  FPS  HDR  CH | FILESIZE   TBR    PROTO | VCODEC          VBR    ACODEC  ABR    ASR   MORE INFO
+248  webm  1920x1080   60       | 100.50MiB  2500k  https  vp9             2000k  audio only  500k   48k   
+251  webm  audio only  0        |  10.23MiB  128k   https  audio only           opus         128k   48k   ";
+
+            selector.UpdateFormats(output);
+
+            Assert.AreEqual(2, selector.Formats.Count);
+            Assert.AreEqual("248", selector.Formats[0].FormatId);
+            Assert.AreEqual("251", selector.Formats[1].FormatId);
+        }
+
+        [TestMethod]
+        public void GetVideoFormats_WithFullFormat_ReturnsOnlyVideo()
+        {
+            var selector = new FormatSelector();
+            var output = @"ID  EXT   RESOLUTION  FPS  HDR  CH | FILESIZE   TBR    PROTO | VCODEC          VBR    ACODEC  ABR    ASR   MORE INFO
+248  webm  1920x1080   60       | 100.50MiB  2500k  https  vp9             2000k  audio only  500k   48k   
+251  webm  audio only  0        |  10.23MiB  128k   https  audio only           opus         128k   48k   ";
+            selector.UpdateFormats(output);
+
+            var videoFormats = selector.GetVideoFormats();
+
+            Assert.AreEqual(1, videoFormats.Count);
+            Assert.AreEqual("248", videoFormats[0].FormatId);
+        }
+
+        [TestMethod]
+        public void GetAudioFormats_WithFullFormat_ReturnsOnlyAudio()
+        {
+            var selector = new FormatSelector();
+            var output = @"ID  EXT   RESOLUTION  FPS  HDR  CH | FILESIZE   TBR    PROTO | VCODEC          VBR    ACODEC  ABR    ASR   MORE INFO
+248  webm  1920x1080   60       | 100.50MiB  2500k  https  vp9             2000k  audio only  500k   48k   
+251  webm  audio only  0        |  10.23MiB  128k   https  audio only           opus         128k   48k   ";
+            selector.UpdateFormats(output);
+
+            var audioFormats = selector.GetAudioFormats();
+
+            Assert.AreEqual(1, audioFormats.Count);
+            Assert.AreEqual("251", audioFormats[0].FormatId);
+        }
+
+        [TestMethod]
+        public void UpdateFormats_MalformedInput_EmptiesFormatList()
+        {
+            var selector = new FormatSelector();
+
+            selector.UpdateFormats("not a valid format output at all");
+
+            Assert.AreEqual(0, selector.Formats.Count);
+        }
     }
 }

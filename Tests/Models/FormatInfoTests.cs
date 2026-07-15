@@ -34,5 +34,31 @@ namespace yt_dlp_gui.Tests.Models
 
             Assert.AreEqual("Opus (128Kbps, 48kHz)", format.DisplayText);
         }
+
+        [TestMethod]
+        public void IsVideo_SetToTrue_ClearsIsAudio()
+        {
+            var format = new FormatInfo
+            {
+                IsAudio = true,
+                IsVideo = true
+            };
+
+            Assert.IsTrue(format.IsVideo);
+            Assert.IsFalse(format.IsAudio);
+        }
+
+        [TestMethod]
+        public void IsAudio_SetToTrue_ClearsIsVideo()
+        {
+            var format = new FormatInfo
+            {
+                IsVideo = true,
+                IsAudio = true
+            };
+
+            Assert.IsTrue(format.IsAudio);
+            Assert.IsFalse(format.IsVideo);
+        }
     }
 }

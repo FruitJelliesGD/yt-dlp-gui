@@ -13,13 +13,16 @@ namespace yt_dlp_gui.Controls
 
         public List<FormatInfo> Formats { get; private set; } = new();
 
-        public FormatInfo? SelectedVideoFormat { get; set; }
-
-        public FormatInfo? SelectedAudioFormat { get; set; }
-
         public void UpdateFormats(string output)
         {
-            Formats = _parser.Parse(output);
+            try
+            {
+                Formats = _parser.Parse(output);
+            }
+            catch
+            {
+                Formats = new List<FormatInfo>();
+            }
         }
 
         public void SelectBestQuality()
@@ -42,7 +45,7 @@ namespace yt_dlp_gui.Controls
             FormatId = "ba";
         }
 
-        public string BuildCustomFormat(string videoFormatId, string audioFormatId)
+        internal string BuildCustomFormat(string videoFormatId, string audioFormatId)
         {
             if (!string.IsNullOrEmpty(videoFormatId) && !string.IsNullOrEmpty(audioFormatId))
             {
