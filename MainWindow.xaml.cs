@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 using System.Windows.Interop;
 
 namespace yt_dlp_gui
@@ -301,6 +302,10 @@ namespace yt_dlp_gui
                 if (!string.IsNullOrWhiteSpace(task.CookiesPath))
                     args += $" --cookies \"{task.CookiesPath}\"";
 
+                // 添加高级选项参数
+                string advancedArgs = Dispatcher.Invoke(() => AdvancedOptionsPanel.GenerateArguments());
+                args += advancedArgs;
+
                 var psi = new ProcessStartInfo
                 {
                     FileName = "yt-dlp",
@@ -386,6 +391,36 @@ namespace yt_dlp_gui
             if (dialog.ShowDialog() == true)
             {
                 CookiesPathTextBox.Text = dialog.FileName;
+            }
+        }
+
+        private void ToggleAdvancedOptions_Click(object sender, RoutedEventArgs e)
+        {
+            if (AdvancedOptionsPanel.Visibility == Visibility.Visible)
+            {
+                // 折叠动画
+                var animation = new DoubleAnimation
+                {
+                    From = AdvancedOptionsPanel.ActualHeight,
+                    To = 0,
+                    Duration = TimeSpan.FromMilliseconds(200),
+                    EasingFunction = new QuadraticEase()
+                };
+                animation.Completed += (s, args) => AdvancedOptionsPanel.Visibility = Visibility.Collapsed;
+                AdvancedOptionsPanel.BeginAnimation(HeightProperty, animation);
+            }
+            else
+            {
+                // 展开动画
+                AdvancedOptionsPanel.Visibility = Visibility.Visible;
+                var animation = new DoubleAnimation
+                {
+                    From = 0,
+                    To = 200,
+                    Duration = TimeSpan.FromMilliseconds(200),
+                    EasingFunction = new QuadraticEase()
+                };
+                AdvancedOptionsPanel.BeginAnimation(HeightProperty, animation);
             }
         }
 

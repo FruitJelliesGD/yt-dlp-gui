@@ -1,0 +1,326 @@
+<UserControl x:Class="yt_dlp_gui.Controls.AdvancedOptionsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="TabHeaderBg" Color="#2D2D30"/>
+        <SolidColorBrush x:Key="TabHeaderHover" Color="#3F3F46"/>
+        <SolidColorBrush x:Key="TabHeaderSelected" Color="#007ACC"/>
+        <SolidColorBrush x:Key="TabContentBg" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="LabelBrush" Color="#B0B0B0"/>
+    </UserControl.Resources>
+
+    <Border Background="{StaticResource TabContentBg}" BorderBrush="#3C3C3C" BorderThickness="1" CornerRadius="4">
+        <TabControl x:Name="OptionsTabControl" Background="Transparent" BorderThickness="0">
+            
+            <!-- 下载选项卡 -->
+            <TabItem Header="下载" Background="{StaticResource TabHeaderBg}">
+                <Grid Background="{StaticResource TabContentBg}" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 输出模板 -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="输出模板:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="OutputTemplateTextBox" Text="%(title)s.%(ext)s" Margin="0,0,0,10"/>
+
+                    <!-- 限制速度 -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="限制速度 (KiB/s):" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="SpeedLimitTextBox" Text="" Margin="0,0,10,0"/>
+                        <CheckBox Grid.Column="1" x:Name="UnlimitedSpeedCheckBox" Content="无限制" IsChecked="True" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- 重试次数 -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="重试次数:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="RetriesTextBox" Text="3" Margin="0,0,10,0"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="设置重试次数"/>
+                    </Grid>
+
+                    <!-- 片段线程数 -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="片段线程数:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="3" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="FragmentThreadsTextBox" Text="1" Margin="0,0,10,0"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="设置片段线程数"/>
+                    </Grid>
+
+                    <!-- 复选框 -->
+                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
+                        <CheckBox x:Name="ForceReDownloadCheckBox" Content="强制重新下载" Margin="0,0,20,0"/>
+                        <CheckBox x:Name="IgnoreErrorsCheckBox" Content="忽略错误"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- 网络选项卡 -->
+            <TabItem Header="网络" Background="{StaticResource TabHeaderBg}">
+                <Grid Background="{StaticResource TabContentBg}" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 代理设置 -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="代理设置:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="ProxyTextBox" Text="" Margin="0,0,0,10" ToolTip="例如: http://proxy:8080 或 socks5://proxy:1080"/>
+
+                    <!-- 超时时间 -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="超时时间 (秒):" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="TimeoutTextBox" Text="" Margin="0,0,10,0"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="设置超时时间"/>
+                    </Grid>
+
+                    <!-- 连接限制 -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="连接限制:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="ConnectionLimitTextBox" Text="" Margin="0,0,10,0"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="设置连接限制"/>
+                    </Grid>
+
+                    <!-- IPv6偏好 -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="IPv6偏好:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <CheckBox Grid.Row="3" Grid.Column="1" x:Name="IPv6PreferenceCheckBox" Content="优先使用IPv6"/>
+                </Grid>
+            </TabItem>
+
+            <!-- 字幕选项卡 -->
+            <TabItem Header="字幕" Background="{StaticResource TabHeaderBg}">
+                <Grid Background="{StaticResource TabContentBg}" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 字幕语言选择 -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="字幕语言:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="0" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="SubtitleLanguageTextBox" Text="" Margin="0,0,10,0" ToolTip="例如: en,zh-Hans,zh-Hant"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="选择字幕语言"/>
+                    </Grid>
+
+                    <!-- 字幕格式 -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="字幕格式:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1" x:Name="SubtitleFormatComboBox" Margin="0,0,0,10">
+                        <ComboBoxItem Content="srt" IsSelected="True"/>
+                        <ComboBoxItem Content="vtt"/>
+                        <ComboBoxItem Content="ass"/>
+                        <ComboBoxItem Content="json3"/>
+                        <ComboBoxItem Content="srv1"/>
+                        <ComboBoxItem Content="srv2"/>
+                        <ComboBoxItem Content="srv3"/>
+                    </ComboBox>
+
+                    <!-- 自动翻译 -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="自动翻译:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <CheckBox Grid.Row="2" Grid.Column="1" x:Name="AutoTranslateCheckBox" Content="启用自动翻译" Margin="0,0,0,10"/>
+
+                    <!-- 嵌入字幕 -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="嵌入字幕:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <CheckBox Grid.Row="3" Grid.Column="1" x:Name="EmbedSubtitlesCheckBox" Content="嵌入字幕到视频文件"/>
+                </Grid>
+            </TabItem>
+
+            <!-- 播放列表选项卡 -->
+            <TabItem Header="播放列表" Background="{StaticResource TabHeaderBg}">
+                <Grid Background="{StaticResource TabContentBg}" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 播放列表下载 -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="播放列表下载:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <CheckBox Grid.Row="0" Grid.Column="1" x:Name="DownloadPlaylistCheckBox" Content="下载播放列表" Margin="0,0,0,10"/>
+
+                    <!-- 排序方式 -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="排序方式:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1" x:Name="PlaylistSortComboBox" Margin="0,0,0,10">
+                        <ComboBoxItem Content="无" IsSelected="True"/>
+                        <ComboBoxItem Content="升序"/>
+                        <ComboBoxItem Content="降序"/>
+                        <ComboBoxItem Content="随机"/>
+                    </ComboBox>
+
+                    <!-- 下载限制 -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="下载限制:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="PlaylistLimitTextBox" Text="" Margin="0,0,10,0" ToolTip="留空表示下载全部"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="设置下载限制"/>
+                    </Grid>
+
+                    <!-- 播放列表项限制 -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="播放列表项限制:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="3" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="PlaylistItemLimitTextBox" Text="" Margin="0,0,10,0" ToolTip="每个播放列表项的限制"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="设置播放列表项限制"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <!-- 后处理选项卡 -->
+            <TabItem Header="后处理" Background="{StaticResource TabHeaderBg}">
+                <Grid Background="{StaticResource TabContentBg}" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 文件转换 -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="文件转换:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <CheckBox Grid.Row="0" Grid.Column="1" x:Name="ConvertFileCheckBox" Content="转换文件格式" Margin="0,0,0,10"/>
+
+                    <!-- 缩略图下载 -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="缩略图下载:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <CheckBox Grid.Row="1" Grid.Column="1" x:Name="DownloadThumbnailCheckBox" Content="下载缩略图" Margin="0,0,0,10"/>
+
+                    <!-- 元数据写入 -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="元数据写入:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <CheckBox Grid.Row="2" Grid.Column="1" x:Name="WriteMetadataCheckBox" Content="写入元数据到文件" Margin="0,0,0,10"/>
+
+                    <!-- 文件名模板 -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="文件名模板:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="3" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="FilenameTemplateTextBox" Text="%(title)s.%(ext)s" Margin="0,0,10,0"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="设置文件名模板"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <!-- 认证选项卡 -->
+            <TabItem Header="认证" Background="{StaticResource TabHeaderBg}">
+                <Grid Background="{StaticResource TabContentBg}" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 用户名/密码 -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="用户名/密码:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="0" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="UsernameTextBox" Text="" Margin="0,0,10,0" ToolTip="用户名"/>
+                        <PasswordBox Grid.Column="1" x:Name="PasswordTextBox" Width="200" Margin="0,0,10,0" ToolTip="密码"/>
+                        <Button Grid.Column="2" Content="..." Width="30" ToolTip="选择凭据"/>
+                    </Grid>
+
+                    <!-- OAuth令牌 -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="OAuth令牌:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="OAuthTokenTextBox" Text="" Margin="0,0,10,0"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="选择OAuth令牌文件"/>
+                    </Grid>
+
+                    <!-- 两步验证 -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="两步验证:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="TwoFactorAuthTextBox" Text="" Margin="0,0,10,0"/>
+                        <Button Grid.Column="1" Content="..." Width="30" ToolTip="设置两步验证"/>
+                    </Grid>
+
+                    <!-- netrc文件 -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="netrc文件:" VerticalAlignment="Center" Margin="0,0,10,10" Foreground="{StaticResource LabelBrush}"/>
+                    <Grid Grid.Row="3" Grid.Column="1" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="NetrcFilePathTextBox" Text="" Margin="0,0,10,0"/>
+                        <Button Grid.Column="1" Content="..." Width="30" Click="SelectNetrcFile_Click" ToolTip="选择netrc文件"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Border>
+</UserControl>
