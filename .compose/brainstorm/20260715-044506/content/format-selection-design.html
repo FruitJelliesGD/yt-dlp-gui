@@ -1,0 +1,149 @@
+<h2>yt-dlp-gui 增强设计（格式选择版）</h2>
+<p class="subtitle">渐进式披露 + 可折叠高级面板 + 自定义指令 + 格式选择</p>
+
+<div class="mockup">
+  <div class="mockup-header">完整界面布局</div>
+  <div class="mockup-body">
+    <div style="padding: 20px; font-family: system-ui, sans-serif;">
+      <!-- 基础区域 -->
+      <div style="margin-bottom: 20px;">
+        <div style="color: #E6E6E6; font-weight: bold; margin-bottom: 8px;">视频链接 (URL)</div>
+        <div class="mock-input" style="width: 100%; padding: 8px;">https://www.youtube.com/watch?v=...</div>
+      </div>
+      
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <div style="flex: 1;">
+          <div style="color: #E6E6E6; font-weight: bold; margin-bottom: 8px;">保存路径</div>
+          <div class="mock-input" style="width: 100%; padding: 8px;">C:\Downloads</div>
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+          <button class="mock-button" style="padding: 8px 16px;">选择文件夹</button>
+        </div>
+      </div>
+      
+      <!-- 格式ID选择区域（改进版） -->
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <div style="flex: 1;">
+          <div style="color: #E6E6E6; font-weight: bold; margin-bottom: 8px;">格式 ID</div>
+          <div style="display: flex; gap: 5px;">
+            <div class="mock-input" style="flex: 1; padding: 8px;">bv*+ba/b</div>
+            <button class="mock-button" style="padding: 8px 12px; font-size: 12px;">▼</button>
+          </div>
+          <!-- 格式选择下拉菜单（模拟） -->
+          <div style="background: #2A2A2A; border: 1px solid #3C3C3C; border-radius: 4px; margin-top: 5px; max-height: 150px; overflow-y: auto;">
+            <div style="padding: 8px; border-bottom: 1px solid #3C3C3C; cursor: pointer; display: flex; justify-content: space-between;">
+              <span style="color: #E6E6E6;">248 - 1080p (video/webm)</span>
+              <span style="color: #B0B0B0; font-size: 12px;">选择</span>
+            </div>
+            <div style="padding: 8px; border-bottom: 1px solid #3C3C3C; cursor: pointer; display: flex; justify-content: space-between;">
+              <span style="color: #E6E6E6;">247 - 720p (video/webm)</span>
+              <span style="color: #B0B0B0; font-size: 12px;">选择</span>
+            </div>
+            <div style="padding: 8px; border-bottom: 1px solid #3C3C3C; cursor: pointer; display: flex; justify-content: space-between;">
+              <span style="color: #E6E6E6;">244 - 480p (video/webm)</span>
+              <span style="color: #B0B0B0; font-size: 12px;">选择</span>
+            </div>
+            <div style="padding: 8px; cursor: pointer; display: flex; justify-content: space-between;">
+              <span style="color: #E6E6E6;">251 - audio only (audio/webm)</span>
+              <span style="color: #B0B0B0; font-size: 12px;">选择</span>
+            </div>
+          </div>
+        </div>
+        <div style="flex: 1;">
+          <div style="color: #E6E6E6; font-weight: bold; margin-bottom: 8px;">Cookies 文件 (可选)</div>
+          <div class="mock-input" style="width: 100%; padding: 8px;">cookies.txt</div>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button class="mock-button" style="flex: 1; padding: 10px; background: #094771;">查看可用格式 (-F)</button>
+        <button class="mock-button" style="flex: 1; padding: 10px; background: #094771;">开始下载</button>
+      </div>
+      
+      <!-- 高级选项分隔线 -->
+      <div style="border-top: 1px solid #3C3C3C; padding-top: 15px; margin-top: 10px;">
+        <button class="mock-button" style="width: 100%; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+          <span>高级选项</span>
+          <span>▼</span>
+        </button>
+      </div>
+      
+      <!-- 高级选项面板（展开状态） -->
+      <div style="background: #252526; border-radius: 4px; margin-top: 10px; overflow: hidden;">
+        <!-- 选项卡导航 -->
+        <div style="display: flex; border-bottom: 1px solid #3C3C3C;">
+          <div style="padding: 10px 16px; background: #094771; color: white; cursor: pointer;">下载</div>
+          <div style="padding: 10px 16px; color: #B0B0B0; cursor: pointer;">网络</div>
+          <div style="padding: 10px 16px; color: #B0B0B0; cursor: pointer;">字幕</div>
+          <div style="padding: 10px 16px; color: #B0B0B0; cursor: pointer;">播放列表</div>
+          <div style="padding: 10px 16px; color: #B0B0B0; cursor: pointer;">后处理</div>
+          <div style="padding: 10px 16px; color: #B0B0B0; cursor: pointer;">认证</div>
+          <div style="padding: 10px 16px; color: #B0B0B0; cursor: pointer;">自定义</div>
+        </div>
+        
+        <!-- 选项卡内容 -->
+        <div style="padding: 15px;">
+          <!-- 下载选项卡内容 -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <label style="color: #B0B0B0; font-size: 12px; display: block; margin-bottom: 4px;">输出模板</label>
+              <div class="mock-input" style="width: 100%; padding: 6px; font-size: 12px;">%(title)s.%(ext)s</div>
+            </div>
+            <div>
+              <label style="color: #B0B0B0; font-size: 12px; display: block; margin-bottom: 4px;">限制速度</label>
+              <div class="mock-input" style="width: 100%; padding: 6px; font-size: 12px;">5M</div>
+            </div>
+            <div>
+              <label style="color: #B0B0B0; font-size: 12px; display: block; margin-bottom: 4px;">重试次数</label>
+              <div class="mock-input" style="width: 100%; padding: 6px; font-size: 12px;">3</div>
+            </div>
+            <div>
+              <label style="color: #B0B0B0; font-size: 12px; display: block; margin-bottom: 4px;">片段线程数</label>
+              <div class="mock-input" style="width: 100%; padding: 6px; font-size: 12px;">4</div>
+            </div>
+          </div>
+          
+          <div style="margin-top: 12px;">
+            <label style="color: #B0B0B0; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+              <input type="checkbox" checked> 强制重新下载
+            </label>
+          </div>
+          <div style="margin-top: 8px;">
+            <label style="color: #B0B0B0; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+              <input type="checkbox"> 忽略错误
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 自定义指令框 -->
+      <div style="margin-top: 15px; background: #252526; border-radius: 4px; padding: 15px;">
+        <div style="color: #E6E6E6; font-weight: bold; margin-bottom: 8px;">自定义指令</div>
+        <div style="color: #B0B0B0; font-size: 12px; margin-bottom: 8px;">输入不在上述选项中的 yt-dlp 参数，多个参数用空格分隔</div>
+        <div class="mock-input" style="width: 100%; padding: 8px; font-family: Consolas, monospace; font-size: 12px;">--extractor-args "youtube:skip=hls,use_ssl=True"</div>
+        <div style="margin-top: 8px; display: flex; gap: 10px;">
+          <button class="mock-button" style="padding: 6px 12px; font-size: 12px;">验证语法</button>
+          <button class="mock-button" style="padding: 6px 12px; font-size: 12px;">清空</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="options" style="margin-top: 30px;">
+  <div class="option" data-choice="confirm" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>确认此设计</h3>
+      <p>我对这个设计满意，可以继续下一步</p>
+    </div>
+  </div>
+  
+  <div class="option" data-choice="modify" onclick="toggleSelect(this)">
+    <div class="letter">✎</div>
+    <div class="content">
+      <h3>需要修改</h3>
+      <p>我有反馈或建议，请调整设计</p>
+    </div>
+  </div>
+</div>

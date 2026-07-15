@@ -1,0 +1,2 @@
+{"type":"click","text":"2\n    \n      内联高级选项\n      高级选项直接显示在界面中，但使用折叠/展开的分组，用户可按需查看。","choice":"inline","id":null,"timestamp":1784061515295}
+{"type":"click","text":"1\n    \n      可折叠高级面板\n      点击\"高级选项\"按钮展开/折叠选项面板，面板内使用选项卡组织不同类别的选项。","choice":"expandable","id":null,"timestamp":1784061530292}

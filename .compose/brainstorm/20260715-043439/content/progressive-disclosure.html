@@ -1,0 +1,56 @@
+<h2>渐进式披露设计详情</h2>
+<p class="subtitle">方案C的具体实现方式</p>
+
+<div class="mockup">
+  <div class="mockup-header">主界面布局</div>
+  <div class="mockup-body">
+    <div style="padding: 20px;">
+      <div class="mock-nav">yt-dlp-gui</div>
+      
+      <div style="margin: 20px 0;">
+        <div class="mock-input" style="width: 100%; padding: 10px;">视频链接 (URL)</div>
+      </div>
+      
+      <div style="display: flex; gap: 10px; margin: 20px 0;">
+        <div class="mock-input" style="flex: 1; padding: 10px;">保存路径</div>
+        <button class="mock-button">选择文件夹</button>
+      </div>
+      
+      <div style="display: flex; gap: 10px; margin: 20px 0;">
+        <div class="mock-input" style="flex: 1; padding: 10px;">格式 ID (可选)</div>
+        <div class="mock-input" style="flex: 1; padding: 10px;">Cookies 文件 (可选)</div>
+      </div>
+      
+      <div style="display: flex; gap: 10px; margin: 20px 0;">
+        <button class="mock-button" style="flex: 1;">查看可用格式 (-F)</button>
+        <button class="mock-button" style="flex: 1;">开始下载</button>
+      </div>
+      
+      <div style="border-top: 1px solid #333; padding-top: 20px; margin-top: 20px;">
+        <button class="mock-button" style="width: 100%;">高级选项 ▼</button>
+      </div>
+      
+      <div style="background: #252526; border-radius: 4px; padding: 15px; margin-top: 10px;">
+        <div style="color: #666; text-align: center;">高级选项区域（可折叠）</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="options" style="margin-top: 30px;">
+  <div class="option" data-choice="expandable" onclick="toggleSelect(this)">
+    <div class="letter">1</div>
+    <div class="content">
+      <h3>可折叠高级面板</h3>
+      <p>点击"高级选项"按钮展开/折叠选项面板，面板内使用选项卡组织不同类别的选项。</p>
+    </div>
+  </div>
+  
+  <div class="option" data-choice="inline" onclick="toggleSelect(this)">
+    <div class="letter">2</div>
+    <div class="content">
+      <h3>内联高级选项</h3>
+      <p>高级选项直接显示在界面中，但使用折叠/展开的分组，用户可按需查看。</p>
+    </div>
+  </div>
+</div>

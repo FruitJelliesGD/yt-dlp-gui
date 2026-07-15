@@ -1,0 +1,40 @@
+<h2>yt-dlp-gui UI增强方案</h2>
+<p class="subtitle">支持yt-dlp大部分指令选项的设计方案</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>方案A：选项卡式布局</h3>
+      <p>使用选项卡组织不同类别的选项，每个选项卡包含相关的yt-dlp选项。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>组织清晰，易于导航</li><li>可扩展性强</li><li>符合用户习惯</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>占用较多空间</li><li>需要切换选项卡</li></ul></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>方案B：可折叠面板</h3>
+      <p>使用可折叠/展开的面板，将选项分组显示。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>节省空间</li><li>可按需展开</li><li>保持界面简洁</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>可能隐藏重要选项</li><li>需要用户主动展开</li></ul></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>方案C：渐进式披露</h3>
+      <p>从简单界面开始，通过"高级"按钮逐步揭示更多选项。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>对新手友好</li><li>保持界面简洁</li><li>可逐步学习</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>高级功能不易发现</li><li>需要额外操作</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
