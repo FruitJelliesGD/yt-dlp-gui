@@ -1,15 +1,18 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Interop;
 using yt_dlp_gui.Models;
@@ -132,12 +135,17 @@ namespace yt_dlp_gui
         private bool _isProcessing = false;
         private readonly UpdateService _updateService = new();
         private CancellationTokenSource? _updateCts;
+        
+        private readonly SettingsService _settingsService = new();
+        private readonly HistoryService _historyService = new();
+        private UserSettings _userSettings = new();
 
         public MainWindow()
         {
             InitializeComponent();
             TaskListView.ItemsSource = TaskList;
             Loaded += MainWindow_Loaded;
+            Closing += MainWindow_Closing;
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -145,8 +153,202 @@ namespace yt_dlp_gui
             EnableDarkTitleBar(this);
             UpdateStatusText.Text = $"当前版本: {_updateService.CurrentVersion}";
 
+            // Load saved settings
+            LoadUserSettings();
+            
+            // Populate history menu
+            RefreshHistoryMenu();
+
             // Startup update check (non-blocking)
             await CheckForUpdatesSilentAsync();
+        }
+
+        private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveUserSettings();
+        }
+
+        private void LoadUserSettings()
+        {
+            _userSettings = _settingsService.LoadSettings();
+            
+            // Apply settings to UI
+            if (!string.IsNullOrEmpty(_userSettings.SavePath))
+                PathTextBox.Text = _userSettings.SavePath;
+            
+            if (!string.IsNullOrEmpty(_userSettings.FormatPreset))
+                FormatSelectorControl.FormatId = _userSettings.FormatPreset;
+            
+            if (!string.IsNullOrEmpty(_userSettings.CookiesPath))
+                CookiesPathTextBox.Text = _userSettings.CookiesPath;
+            
+            // Apply advanced settings
+            if (_userSettings.Advanced != null)
+            {
+                var adv = _userSettings.Advanced;
+                AdvancedOptionsPanel.OutputTemplateTextBox.Text = adv.OutputTemplate;
+                AdvancedOptionsPanel.SpeedLimitTextBox.Text = adv.SpeedLimit;
+                AdvancedOptionsPanel.UnlimitedSpeedCheckBox.IsChecked = adv.UnlimitedSpeed;
+                AdvancedOptionsPanel.RetriesTextBox.Text = adv.Retries;
+                AdvancedOptionsPanel.FragmentThreadsTextBox.Text = adv.FragmentThreads;
+                AdvancedOptionsPanel.ForceReDownloadCheckBox.IsChecked = adv.ForceReDownload;
+                AdvancedOptionsPanel.IgnoreErrorsCheckBox.IsChecked = adv.IgnoreErrors;
+                
+                AdvancedOptionsPanel.ProxyTextBox.Text = adv.Proxy;
+                AdvancedOptionsPanel.TimeoutTextBox.Text = adv.Timeout;
+                AdvancedOptionsPanel.ConnectionLimitTextBox.Text = adv.ConnectionLimit;
+                AdvancedOptionsPanel.IPv6PreferenceCheckBox.IsChecked = adv.IPv6Preference;
+                
+                AdvancedOptionsPanel.SubtitleLanguageTextBox.Text = adv.SubtitleLanguage;
+                AdvancedOptionsPanel.SubtitleFormatComboBox.SelectedItem = 
+                    AdvancedOptionsPanel.SubtitleFormatComboBox.Items
+                        .Cast<ComboBoxItem>()
+                        .FirstOrDefault(i => i.Content.ToString() == adv.SubtitleFormat);
+                AdvancedOptionsPanel.AutoTranslateCheckBox.IsChecked = adv.AutoTranslate;
+                AdvancedOptionsPanel.EmbedSubtitlesCheckBox.IsChecked = adv.EmbedSubtitles;
+                
+                AdvancedOptionsPanel.DownloadPlaylistCheckBox.IsChecked = adv.DownloadPlaylist;
+                AdvancedOptionsPanel.PlaylistSortComboBox.SelectedItem = 
+                    AdvancedOptionsPanel.PlaylistSortComboBox.Items
+                        .Cast<ComboBoxItem>()
+                        .FirstOrDefault(i => i.Content.ToString() == GetPlaylistSortDisplay(adv.PlaylistSort));
+                AdvancedOptionsPanel.PlaylistLimitTextBox.Text = adv.PlaylistLimit;
+                AdvancedOptionsPanel.PlaylistItemLimitTextBox.Text = adv.PlaylistItemLimit;
+                
+                AdvancedOptionsPanel.ConvertFileCheckBox.IsChecked = adv.ConvertFile;
+                AdvancedOptionsPanel.DownloadThumbnailCheckBox.IsChecked = adv.DownloadThumbnail;
+                AdvancedOptionsPanel.WriteMetadataCheckBox.IsChecked = adv.WriteMetadata;
+                AdvancedOptionsPanel.FilenameTemplateTextBox.Text = adv.FilenameTemplate;
+                
+                AdvancedOptionsPanel.UsernameTextBox.Text = adv.Username;
+                AdvancedOptionsPanel.NetrcFilePathTextBox.Text = adv.NetrcFilePath;
+            }
+        }
+
+        private string GetPlaylistSortDisplay(string sort) => sort switch
+        {
+            "asc" => "升序",
+            "desc" => "降序",
+            "random" => "随机",
+            _ => "无"
+        };
+
+        private void SaveUserSettings()
+        {
+            // Collect settings from UI
+            _userSettings.SavePath = PathTextBox.Text.Trim();
+            _userSettings.FormatPreset = FormatSelectorControl.FormatId;
+            _userSettings.CookiesPath = CookiesPathTextBox.Text.Trim();
+            
+            // Collect advanced settings
+            _userSettings.Advanced = new AdvancedSettings
+            {
+                OutputTemplate = AdvancedOptionsPanel.OutputTemplate,
+                SpeedLimit = AdvancedOptionsPanel.SpeedLimit,
+                UnlimitedSpeed = AdvancedOptionsPanel.UnlimitedSpeedCheckBox.IsChecked == true,
+                Retries = AdvancedOptionsPanel.Retries,
+                FragmentThreads = AdvancedOptionsPanel.FragmentThreads,
+                ForceReDownload = AdvancedOptionsPanel.ForceReDownload,
+                IgnoreErrors = AdvancedOptionsPanel.IgnoreErrors,
+                
+                Proxy = AdvancedOptionsPanel.Proxy,
+                Timeout = AdvancedOptionsPanel.Timeout,
+                ConnectionLimit = AdvancedOptionsPanel.ConnectionLimit,
+                IPv6Preference = AdvancedOptionsPanel.IPv6Preference,
+                
+                SubtitleLanguage = AdvancedOptionsPanel.SubtitleLanguage,
+                SubtitleFormat = AdvancedOptionsPanel.SubtitleFormat,
+                AutoTranslate = AdvancedOptionsPanel.AutoTranslate,
+                EmbedSubtitles = AdvancedOptionsPanel.EmbedSubtitles,
+                
+                DownloadPlaylist = AdvancedOptionsPanel.DownloadPlaylist,
+                PlaylistSort = AdvancedOptionsPanel.PlaylistSort,
+                PlaylistLimit = AdvancedOptionsPanel.PlaylistLimit,
+                PlaylistItemLimit = AdvancedOptionsPanel.PlaylistItemLimit,
+                
+                ConvertFile = AdvancedOptionsPanel.ConvertFile,
+                DownloadThumbnail = AdvancedOptionsPanel.DownloadThumbnail,
+                WriteMetadata = AdvancedOptionsPanel.WriteMetadata,
+                FilenameTemplate = AdvancedOptionsPanel.FilenameTemplate,
+                
+                Username = AdvancedOptionsPanel.Username,
+                NetrcFilePath = AdvancedOptionsPanel.NetrcFilePath
+            };
+            
+            _settingsService.SaveSettings(_userSettings);
+        }
+
+        private void History_Click(object sender, RoutedEventArgs e)
+        {
+            // Context menu is shown automatically by WPF
+        }
+
+        private void RefreshHistoryMenu()
+        {
+            var history = _historyService.LoadHistory();
+            HistoryContextMenu.Items.Clear();
+
+            if (history.Count == 0)
+            {
+                var emptyItem = new MenuItem { Header = "暂无历史记录", IsEnabled = false };
+                HistoryContextMenu.Items.Add(emptyItem);
+            }
+            else
+            {
+                foreach (var entry in history.Take(10))
+                {
+                    var menuItem = new MenuItem
+                    {
+                        Header = FormatHistoryItem(entry),
+                        Tag = entry.Url,
+                        ToolTip = $"{entry.Url}\n状态: {entry.Status}\n时间: {entry.Timestamp:yyyy-MM-dd HH:mm}"
+                    };
+                    menuItem.Click += HistoryItem_Click;
+                    HistoryContextMenu.Items.Add(menuItem);
+                }
+            }
+
+            HistoryContextMenu.Items.Add(new Separator());
+            
+            var clearItem = new MenuItem { Header = "清除历史" };
+            clearItem.Click += ClearHistory_Click;
+            HistoryContextMenu.Items.Add(clearItem);
+        }
+
+        private string FormatHistoryItem(DownloadHistory entry)
+        {
+            string displayName = !string.IsNullOrEmpty(entry.FileName) 
+                ? entry.FileName 
+                : entry.Url;
+            
+            // Truncate long names
+            if (displayName.Length > 40)
+                displayName = displayName.Substring(0, 37) + "...";
+            
+            return $"{displayName} ({entry.Status})";
+        }
+
+        private void HistoryItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.Tag is string url)
+            {
+                UrlTextBox.Text = url;
+            }
+        }
+
+        private void ClearHistory_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show(
+                "确定要清除所有历史记录吗？",
+                "确认清除",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+            
+            if (result == MessageBoxResult.Yes)
+            {
+                _historyService.ClearHistory();
+                RefreshHistoryMenu();
+            }
         }
 
         // ================= 深色标题栏 =================
@@ -385,6 +587,11 @@ namespace yt_dlp_gui
                         task.Speed = "--";
                         task.ETA = "--";
                         task.IsDownloading = false;
+                        
+                        // Record to history
+                        string status = process.ExitCode == 0 ? "成功" : "失败";
+                        _historyService.AddEntry(task.Url, status);
+                        RefreshHistoryMenu();
                     });
                 }
                 else

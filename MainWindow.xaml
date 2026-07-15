@@ -195,24 +195,37 @@
         <!-- 操作按钮 -->
         <Grid Grid.Row="3" Margin="0,0,0,12">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="查看可用格式 (-F)"
+            <Button Content="历史记录"
+                    Height="36"
+                    Width="80"
+                    Margin="0,0,10,0"
+                    Click="History_Click">
+                <Button.ContextMenu>
+                    <ContextMenu x:Name="HistoryContextMenu"/>
+                </Button.ContextMenu>
+            </Button>
+
+            <Button Grid.Column="1"
+                    Content="查看可用格式 (-F)"
                     Height="36"
                     Margin="0,0,10,0"
                     Click="CheckFormats_Click"/>
 
-            <Button Grid.Column="1"
+            <Button Grid.Column="2"
                     Content="高级选项"
                     Height="36"
                     Width="100"
                     Margin="0,0,10,0"
                     Click="ToggleAdvancedOptions_Click"/>
 
-            <Button Grid.Column="2"
+            <Button Grid.Column="3"
                     Content="开始下载"
                     Height="36"
                     Click="DownloadVideo_Click"/>
