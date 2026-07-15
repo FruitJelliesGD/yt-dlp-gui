@@ -38,11 +38,12 @@ namespace yt_dlp_gui.Services
             // yt-dlp -F output uses pipe separator:
             // Full format: ID EXT RESOLUTION FPS HDR CH | FILESIZE TBR PROTO | VCODEC VBR ACODEC ABR ASR MORE INFO
             // Simplified:  ID EXT RESOLUTION FPS | FILESIZE PROTO VCODEC ACODEC
-            var pipeIndex = line.IndexOf('|');
-            if (pipeIndex < 0) return null;
+            var parts = line.Split('|');
+            if (parts.Length < 2) return null;
 
-            var leftPart = line[..pipeIndex].Trim();
-            var rightPart = line[(pipeIndex + 1)..].Trim();
+            var leftPart = parts[0].Trim();
+            // Join remaining parts with double-space to preserve token boundaries for \s{2,} split
+            var rightPart = string.Join("  ", parts, 1, parts.Length - 1).Trim();
 
             // Left side: ID EXT RESOLUTION FPS
             var leftMatch = Regex.Match(leftPart, @"^(\d+)\s+(\S+)\s+(.+?)\s+(\S+)\s*$");
