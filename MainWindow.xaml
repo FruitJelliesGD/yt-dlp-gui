@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:yt_dlp_gui.Controls"
         mc:Ignorable="d"
         Title="yt-dlp-gui"
         Width="900"
@@ -173,13 +174,9 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Orientation="Horizontal" Width="369">
-                <TextBlock Text="格式 ID" FontWeight="Bold" VerticalAlignment="Center"/>
-                <TextBox x:Name="FormatIdTextBox"
-                         Height="30"
-                         Margin="10,0"
-                         HorizontalAlignment="Stretch"/>
-            </StackPanel>
+            <local:FormatSelectorControl x:Name="FormatSelectorControl"
+                                         Width="400"
+                                         Height="80"/>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <TextBlock Text="Cookies" FontWeight="Bold" VerticalAlignment="Center"/>
