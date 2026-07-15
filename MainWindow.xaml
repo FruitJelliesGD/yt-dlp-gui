@@ -138,6 +138,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -237,13 +238,13 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <local:AdvancedOptionsPanel x:Name="AdvancedOptionsPanel" 
+            <local:AdvancedOptionsPanel x:Name="AdvancedOptionsPanel"
                                        Visibility="Collapsed"
                                        Height="200"/>
         </Grid>
 
         <!-- 任务列表 -->
-        <ListView Grid.Row="4"
+        <ListView Grid.Row="5"
           x:Name="TaskListView"
           Background="#252526"
           Foreground="#D4D4D4"
@@ -339,7 +340,7 @@
             </ListView>
 
         <!-- 更新状态栏 -->
-        <Grid Grid.Row="5" Margin="0,8,0,0">
+        <Grid Grid.Row="6" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
