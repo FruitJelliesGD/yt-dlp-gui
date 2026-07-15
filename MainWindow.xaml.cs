@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
@@ -122,8 +122,6 @@ namespace yt_dlp_gui
         private async void CheckFormats_Click(object sender, RoutedEventArgs e)
         {
             string url = UrlTextBox.Text.Trim();
-            string formatId = FormatIdTextBox.Text.Trim();
-            string savePath = PathTextBox.Text.Trim();
             string commonArgs = GetCommonArgs();
             if (string.IsNullOrEmpty(url))
             {
@@ -152,13 +150,16 @@ namespace yt_dlp_gui
 
                         Dispatcher.Invoke(() =>
                         {
+                            // 更新格式选择器
+                            FormatSelectorControl.UpdateFormats(output);
+                            
+                            // 仍然显示原始输出窗口
                             var win = new Formats(
                                 !string.IsNullOrWhiteSpace(output) ? output : error
                             );
                             win.Owner = this;
                             win.Show();
                         });
-
                     }
                 }
                 catch (Exception ex)
@@ -167,7 +168,6 @@ namespace yt_dlp_gui
                         MessageBox.Show(ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error)
                     );
                 }
-
             });
         }
 
@@ -182,9 +182,9 @@ namespace yt_dlp_gui
             var task = new DownloadTask
             {
                 Url = UrlTextBox.Text.Trim(),
-                Format = string.IsNullOrWhiteSpace(FormatIdTextBox.Text)
+                Format = string.IsNullOrWhiteSpace(FormatSelectorControl.FormatId)
         ? "bv*+ba/b"
-        : FormatIdTextBox.Text.Trim(),
+        : FormatSelectorControl.FormatId.Trim(),
                 SavePath = PathTextBox.Text.Trim(),
                 CookiesPath = CookiesPathTextBox.Text.Trim(),
             };
