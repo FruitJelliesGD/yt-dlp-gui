@@ -139,6 +139,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- URL -->
@@ -324,6 +325,36 @@
                 </ListView.View>
             </ListView>
 
+        <!-- 更新状态栏 -->
+        <Grid Grid.Row="5" Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="UpdateStatusText"
+                       Text="当前版本: 0.0.0"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource SubTextBrush}"
+                       FontSize="12"/>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button x:Name="CheckUpdateButton"
+                        Content="检查更新"
+                        Height="26"
+                        Padding="10,2"
+                        Click="CheckUpdate_Click"
+                        FontSize="12"/>
+                <ProgressBar x:Name="UpdateProgressBar"
+                             Width="120"
+                             Height="14"
+                             Margin="8,0,0,0"
+                             VerticalAlignment="Center"
+                             Minimum="0"
+                             Maximum="100"
+                             Visibility="Collapsed"/>
+            </StackPanel>
+        </Grid>
 
     </Grid>
 </Window>

@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -11,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Interop;
+using yt_dlp_gui.Models;
+using yt_dlp_gui.Services;
 
 namespace yt_dlp_gui
 {
@@ -127,6 +130,9 @@ namespace yt_dlp_gui
         private readonly ConcurrentQueue<DownloadTask> _taskQueue = new();
         private readonly SemaphoreSlim _semaphore = new(2); // 同时下载 2 个
         private bool _isProcessing = false;
+        private readonly UpdateService _updateService = new();
+        private CancellationTokenSource? _updateCts;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -134,9 +140,13 @@ namespace yt_dlp_gui
             Loaded += MainWindow_Loaded;
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             EnableDarkTitleBar(this);
+            UpdateStatusText.Text = $"当前版本: {_updateService.CurrentVersion}";
+
+            // Startup update check (non-blocking)
+            await CheckForUpdatesSilentAsync();
         }
 
         // ================= 深色标题栏 =================
@@ -482,6 +492,133 @@ namespace yt_dlp_gui
             if (sender is FrameworkElement element && element.DataContext is DownloadTask task)
             {
                 task.Cancel();
+            }
+        }
+
+        // ================= 更新功能 =================
+
+        private async Task CheckForUpdatesSilentAsync()
+        {
+            try
+            {
+                var info = await _updateService.CheckForUpdatesAsync();
+                if (info != null)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        UpdateStatusText.Text = $"有新版本可用: v{info.Version}";
+                        UpdateStatusText.Foreground =
+                            (System.Windows.Media.Brush)FindResource("BtnHover");
+                    });
+                }
+            }
+            catch
+            {
+                // Silent check: ignore errors
+            }
+        }
+
+        private async void CheckUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            CheckUpdateButton.IsEnabled = false;
+            CheckUpdateButton.Content = "检查中...";
+
+            try
+            {
+                var info = await _updateService.CheckForUpdatesAsync();
+                if (info == null)
+                {
+                    UpdateStatusText.Text = "已是最新版本";
+                    UpdateStatusText.Foreground =
+                        (System.Windows.Media.Brush)FindResource("SubTextBrush");
+                    return;
+                }
+
+                UpdateStatusText.Text = $"有新版本: v{info.Version}";
+                UpdateStatusText.Foreground =
+                    (System.Windows.Media.Brush)FindResource("BtnHover");
+
+                var releaseInfo = $"新版本: v{info.Version}\n发布日期: {info.PublishedAt:yyyy-MM-dd}\n\n更新内容:\n{info.ReleaseNotes}";
+                var result = MessageBox.Show(
+                    $"{releaseInfo}\n\n是否立即更新？",
+                    "发现新版本",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Information);
+
+                if (result != MessageBoxResult.Yes)
+                    return;
+
+                await DownloadAndApplyUpdateAsync(info);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"检查更新失败: {ex.Message}",
+                    "错误",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            finally
+            {
+                CheckUpdateButton.IsEnabled = true;
+                CheckUpdateButton.Content = "检查更新";
+            }
+        }
+
+        private async Task DownloadAndApplyUpdateAsync(UpdateInfo info)
+        {
+            _updateCts?.Cancel();
+            _updateCts = new CancellationTokenSource();
+            var ct = _updateCts.Token;
+
+            CheckUpdateButton.IsEnabled = false;
+            CheckUpdateButton.Content = "下载中...";
+            UpdateProgressBar.Visibility = Visibility.Visible;
+
+            try
+            {
+                var progress = new Progress<double>(value =>
+                {
+                    UpdateProgressBar.Value = value;
+                });
+
+                var tempPath = await _updateService.DownloadUpdateAsync(
+                    info.DownloadUrl, progress, ct);
+
+                UpdateProgressBar.Visibility = Visibility.Collapsed;
+
+                var result = MessageBox.Show(
+                    "下载完成！程序将在更新后自动重启。\n\n点击[确定]立即更新。",
+                    "下载完成",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Information);
+
+                if (result != MessageBoxResult.OK)
+                {
+                    File.Delete(tempPath);
+                    return;
+                }
+
+                var scriptPath = _updateService.CreateUpdateScript(tempPath);
+                _updateService.ApplyUpdate(scriptPath);
+            }
+            catch (OperationCanceledException)
+            {
+                UpdateProgressBar.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception ex)
+            {
+                UpdateProgressBar.Visibility = Visibility.Collapsed;
+                MessageBox.Show(
+                    $"更新失败: {ex.Message}",
+                    "错误",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            finally
+            {
+                CheckUpdateButton.IsEnabled = true;
+                CheckUpdateButton.Content = "检查更新";
             }
         }
 
