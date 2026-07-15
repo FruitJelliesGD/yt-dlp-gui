@@ -31,7 +31,7 @@ namespace yt_dlp_gui.Tests.Models
                 AudioBitrate = "128Kbps",
                 AudioSampleRate = "48kHz"
             };
-            
+
             Assert.AreEqual("Opus (128Kbps, 48kHz)", format.DisplayText);
         }
     }

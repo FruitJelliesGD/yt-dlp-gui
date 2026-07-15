@@ -13,8 +13,8 @@ namespace yt_dlp_gui.Models
         public string AudioSampleRate { get; set; } = string.Empty;
         public bool IsVideo { get; set; }
         public bool IsAudio { get; set; }
-        
-        public string DisplayText => IsVideo 
+
+        public string DisplayText => IsVideo
             ? $"{Resolution} ({Codec}, {Bitrate}, {Fps})"
             : $"{AudioCodec} ({AudioBitrate}, {AudioSampleRate})";
     }
