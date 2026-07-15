@@ -11,8 +11,8 @@ namespace yt_dlp_gui.Tests.Services
         {
             var parser = new FormatParser();
             var output = @"ID  EXT   RESOLUTION  FPS  HDR  CH | FILESIZE   TBR    PROTO | VCODEC          VBR    ACODEC  ABR    ASR   MORE INFO
-248  webm  1920x1080   60       | 100.50MiB  2500k  https  vp9             2000k  audio only  500k   48k   
-251  webm  audio only  0        |  10.23MiB  128k   https  audio only           opus         128k   48k   ";
+248  webm  1920x1080   60       | 100.50MiB  2500k  https | vp9             2000k  audio only  500k   48k   
+251  webm  audio only  0        |  10.23MiB  128k   https | audio only           opus         128k   48k   ";
 
             var formats = parser.Parse(output);
 

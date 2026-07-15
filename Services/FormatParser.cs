@@ -11,10 +11,6 @@ namespace yt_dlp_gui.Services
             @"(\d{3,4}x\d{3,4})",
             RegexOptions.Compiled);
 
-        private static readonly Regex FpsRegex = new(
-            @"(\d+)\s*fps",
-            RegexOptions.Compiled);
-
         public List<FormatInfo> Parse(string output)
         {
             var formats = new List<FormatInfo>();
@@ -39,14 +35,17 @@ namespace yt_dlp_gui.Services
 
         private FormatInfo? ParseLine(string line)
         {
-            // yt-dlp -F output uses pipe separator:
+            // yt-dlp -F output uses pipe separator(s):
             // Full format: ID EXT RESOLUTION FPS HDR CH | FILESIZE TBR PROTO | VCODEC VBR ACODEC ABR ASR MORE INFO
             // Simplified:  ID EXT RESOLUTION FPS | FILESIZE PROTO VCODEC ACODEC
-            var pipeIndex = line.IndexOf('|');
-            if (pipeIndex < 0) return null;
+            var pipeParts = line.Split('|');
+            if (pipeParts.Length < 2) return null;
 
-            var leftPart = line[..pipeIndex].Trim();
-            var rightPart = line[(pipeIndex + 1)..].Trim();
+            var leftPart = pipeParts[0].Trim();
+            // For two-pipe format, combine middle and right sections with proper spacing
+            var rightPart = pipeParts.Length >= 3
+                ? $"{pipeParts[1].Trim()}  {pipeParts[2].Trim()}"
+                : pipeParts[1].Trim();
 
             // Left side: ID EXT RESOLUTION FPS
             var leftMatch = Regex.Match(leftPart, @"^(\d+)\s+(\S+)\s+(.+?)\s+(\S+)\s*$");
