@@ -28,23 +28,11 @@ namespace yt_dlp_gui.Tests.Models
             {
                 IsAudio = true,
                 AudioCodec = "Opus",
-                AudioQuality = "192kbps",
                 AudioBitrate = "128Kbps",
                 AudioSampleRate = "48kHz"
             };
             
-            Assert.AreEqual("Opus (192kbps, 128Kbps, 48kHz)", format.DisplayText);
-        }
-        
-        [TestMethod]
-        public void AudioQuality_PropertyExists()
-        {
-            var format = new FormatInfo
-            {
-                AudioQuality = "320kbps"
-            };
-            
-            Assert.AreEqual("320kbps", format.AudioQuality);
+            Assert.AreEqual("Opus (128Kbps, 48kHz)", format.DisplayText);
         }
     }
 }
