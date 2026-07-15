@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:yt_dlp_gui.Controls"
         mc:Ignorable="d"
         Title="yt-dlp-gui"
-        Width="900"
+        Width="1050"
         Height="560"
         Background="#1E1E1E"
         Foreground="#E6E6E6">
@@ -221,18 +221,21 @@
                     <GridView>
 
                         <!-- URL -->
-                        <GridViewColumn Header="URL" Width="380">
+                        <GridViewColumn Header="URL" Width="300">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Url}"
                                    TextTrimming="CharacterEllipsis"
-                                   Foreground="#D4D4D4"/>
+                                   Foreground="#569CD6"
+                                   Cursor="Hand"
+                                   TextDecorations="Underline"
+                                   MouseLeftButtonDown="Url_Click"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
                         <!-- 状态 -->
-                        <GridViewColumn Header="状态" Width="80">
+                        <GridViewColumn Header="状态" Width="60">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Status}"/>
@@ -241,10 +244,19 @@
                         </GridViewColumn>
 
                         <!-- 速度 -->
-                        <GridViewColumn Header="速度" Width="100">
+                        <GridViewColumn Header="速度" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Speed}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <!-- ETA -->
+                        <GridViewColumn Header="ETA" Width="60">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ETA}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -263,6 +275,28 @@
                                        FontSize="11"
                                        FontWeight="SemiBold" Foreground="Black"/>
                                     </Grid>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <!-- 操作按钮 -->
+                        <GridViewColumn Header="操作" Width="80">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="⏸"
+                                                Width="28"
+                                                Height="24"
+                                                Margin="2"
+                                                Click="PauseButton_Click"
+                                                ToolTip="暂停/恢复"/>
+                                        <Button Content="✕"
+                                                Width="28"
+                                                Height="24"
+                                                Margin="2"
+                                                Click="CancelButton_Click"
+                                                ToolTip="取消"/>
+                                    </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

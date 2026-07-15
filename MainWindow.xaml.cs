@@ -48,6 +48,65 @@ namespace yt_dlp_gui
                 get => _speed;
                 set { _speed = value; OnPropertyChanged(nameof(Speed)); }
             }
+
+            private string _eta = "--";
+            public string ETA
+            {
+                get => _eta;
+                set { _eta = value; OnPropertyChanged(nameof(ETA)); }
+            }
+
+            private bool _isPaused;
+            public bool IsPaused
+            {
+                get => _isPaused;
+                set { _isPaused = value; OnPropertyChanged(nameof(IsPaused)); }
+            }
+
+            private bool _isDownloading;
+            public bool IsDownloading
+            {
+                get => _isDownloading;
+                set { _isDownloading = value; OnPropertyChanged(nameof(IsDownloading)); }
+            }
+
+            private Process _process;
+            public Process Process
+            {
+                get => _process;
+                set { _process = value; }
+            }
+
+            public void Cancel()
+            {
+                if (_process != null && !_process.HasExited)
+                {
+                    try
+                    {
+                        _process.Kill();
+                    }
+                    catch { }
+                }
+                Status = "已取消";
+                IsDownloading = false;
+                IsPaused = false;
+            }
+
+            public void Pause()
+            {
+                if (_process != null && !_process.HasExited)
+                {
+                    try
+                    {
+                        _process.Kill();
+                    }
+                    catch { }
+                }
+                IsPaused = true;
+                IsDownloading = false;
+                Status = "已暂停";
+            }
+
             public override string ToString()
             {
                 return Url;
@@ -233,9 +292,11 @@ namespace yt_dlp_gui
                 {
                     task.Status = "下载中";
                     task.Progress = 0;
+                    task.IsDownloading = true;
+                    task.IsPaused = false;
                 });
 
-                string args = $"-f \"{task.Format}\" \"{task.Url}\" -P \"{task.SavePath}\"";
+                string args = $"-f \"{task.Format}\" \"{task.Url}\" -P \"{task.SavePath}\" --continue";
 
                 if (!string.IsNullOrWhiteSpace(task.CookiesPath))
                     args += $" --cookies \"{task.CookiesPath}\"";
@@ -250,10 +311,18 @@ namespace yt_dlp_gui
                     CreateNoWindow = true,
                 };
 
-                using var process = Process.Start(psi);
+                var process = Process.Start(psi);
+                task.Process = process;
+
+                var startTime = DateTime.Now;
 
                 while (!process.StandardOutput.EndOfStream)
                 {
+                    if (task.IsPaused)
+                    {
+                        break;
+                    }
+
                     var line = process.StandardOutput.ReadLine();
 
                     var progressMatch = ProgressRegex.Match(line);
@@ -264,6 +333,23 @@ namespace yt_dlp_gui
                         if (progressMatch.Success)
                         {
                             task.Progress = double.Parse(progressMatch.Groups[1].Value);
+
+                            // Calculate ETA
+                            if (task.Progress > 0 && task.Progress < 100)
+                            {
+                                var elapsed = DateTime.Now - startTime;
+                                var totalSeconds = elapsed.TotalSeconds * 100 / task.Progress;
+                                var remaining = TimeSpan.FromSeconds(totalSeconds - elapsed.TotalSeconds);
+                                task.ETA = remaining.TotalHours >= 1
+                                    ? $"{(int)remaining.TotalHours}h {remaining.Minutes}m {remaining.Seconds}s"
+                                    : remaining.TotalMinutes >= 1
+                                        ? $"{(int)remaining.TotalMinutes}m {remaining.Seconds}s"
+                                        : $"{remaining.Seconds}s";
+                            }
+                            else if (task.Progress >= 100)
+                            {
+                                task.ETA = "0s";
+                            }
                         }
 
                         if (speedMatch.Success)
@@ -273,14 +359,23 @@ namespace yt_dlp_gui
                     });
                 }
 
-                process.WaitForExit();
-
-                Dispatcher.Invoke(() =>
+                if (!task.IsPaused)
                 {
-                    task.Progress = process.ExitCode == 0 ? 100 : task.Progress;
-                    task.Status = process.ExitCode == 0 ? "完成" : "失败";
-                    task.Speed = "--";
-                });
+                    process.WaitForExit();
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        task.Progress = process.ExitCode == 0 ? 100 : task.Progress;
+                        task.Status = process.ExitCode == 0 ? "完成" : "失败";
+                        task.Speed = "--";
+                        task.ETA = "--";
+                        task.IsDownloading = false;
+                    });
+                }
+                else
+                {
+                    process.Dispose();
+                }
             });
         }
 
@@ -305,6 +400,54 @@ namespace yt_dlp_gui
             }
 
             return args;
+        }
+
+        private void ResumeDownload(DownloadTask task)
+        {
+            if (task.IsPaused)
+            {
+                _taskQueue.Enqueue(task);
+                StartQueueProcessor();
+            }
+        }
+
+        private void Url_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.DataContext is DownloadTask task)
+            {
+                try
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = task.Url,
+                        UseShellExecute = true
+                    });
+                }
+                catch { }
+            }
+        }
+
+        private void PauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.DataContext is DownloadTask task)
+            {
+                if (task.IsPaused)
+                {
+                    ResumeDownload(task);
+                }
+                else if (task.IsDownloading)
+                {
+                    task.Pause();
+                }
+            }
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.DataContext is DownloadTask task)
+            {
+                task.Cancel();
+            }
         }
 
     } // 这是 MainWindow 类的结尾
