@@ -4,7 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignHeight="120" d:DesignWidth="450"
+             d:DesignHeight="100" d:DesignWidth="400"
              Background="Transparent">
 
     <Grid>
@@ -15,42 +15,47 @@
         </Grid.RowDefinitions>
 
         <!-- 格式ID输入框 -->
-        <Grid Grid.Row="0" Margin="0,0,0,5">
+        <Grid Grid.Row="0" Margin="0,0,0,6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="FormatIdTextBox"
-                     Height="30"
-                     Text="bv*+ba/b"
-                     VerticalContentAlignment="Center"/>
+                     Text="bv*+ba/b"/>
 
             <Button x:Name="DropdownButton"
                     Grid.Column="1"
-                    Width="30"
-                    Height="30"
-                    Margin="5,0,0,0"
+                    Width="32"
+                    Margin="4,0,0,0"
                     Content="▼"
                     Click="DropdownButton_Click"/>
         </Grid>
 
         <!-- 快速选择按钮 -->
-        <WrapPanel Grid.Row="1" Margin="0,0,0,5">
+        <WrapPanel Grid.Row="1" Margin="0,0,0,6">
             <Button Content="最佳画质"
-                    Margin="0,0,5,0"
+                    Margin="0,0,4,0"
+                    Height="28"
+                    Padding="8,0"
                     Click="QuickSelect_Click"
                     Tag="best"/>
             <Button Content="1080p"
-                    Margin="0,0,5,0"
+                    Margin="0,0,4,0"
+                    Height="28"
+                    Padding="8,0"
                     Click="QuickSelect_Click"
                     Tag="1080p"/>
             <Button Content="720p"
-                    Margin="0,0,5,0"
+                    Margin="0,0,4,0"
+                    Height="28"
+                    Padding="8,0"
                     Click="QuickSelect_Click"
                     Tag="720p"/>
             <Button Content="仅音频"
-                    Margin="0,0,5,0"
+                    Margin="0,0,4,0"
+                    Height="28"
+                    Padding="8,0"
                     Click="QuickSelect_Click"
                     Tag="audio"/>
         </WrapPanel>
@@ -64,7 +69,7 @@
                StaysOpen="False"
                Width="450">
 
-            <Border Background="#2A2A2A"
+            <Border Background="#252526"
                     BorderBrush="#3C3C3C"
                     BorderThickness="1"
                     CornerRadius="4">
@@ -78,7 +83,7 @@
 
                     <!-- 视频格式选择 -->
                     <StackPanel Grid.Row="0" Margin="8,8,8,4">
-                        <TextBlock Text="视频格式" FontWeight="Bold" Foreground="#E6E6E6" Margin="0,0,0,4"/>
+                        <TextBlock Text="视频格式" FontWeight="Bold" Margin="0,0,0,4"/>
                         <ListBox x:Name="VideoFormatListBox"
                                  MaxHeight="120"
                                  Background="Transparent"
@@ -92,10 +97,10 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <TextBlock Text="{Binding Resolution}" Foreground="#E6E6E6"/>
-                                            <TextBlock Text="{Binding DisplayText}" FontSize="11" Foreground="#B0B0B0"/>
+                                            <TextBlock Text="{Binding Resolution}"/>
+                                            <TextBlock Text="{Binding DisplayText}" FontSize="11" Foreground="{StaticResource SubTextBrush}"/>
                                         </StackPanel>
-                                        <TextBlock Grid.Column="1" Text="{Binding FormatId}" VerticalAlignment="Center" Foreground="#E6E6E6"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding FormatId}" VerticalAlignment="Center"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -104,7 +109,7 @@
 
                     <!-- 音频格式选择 -->
                     <StackPanel Grid.Row="1" Margin="8,4,8,4">
-                        <TextBlock Text="音频格式" FontWeight="Bold" Foreground="#E6E6E6" Margin="0,0,0,4"/>
+                        <TextBlock Text="音频格式" FontWeight="Bold" Margin="0,0,0,4"/>
                         <ListBox x:Name="AudioFormatListBox"
                                  MaxHeight="80"
                                  Background="Transparent"
@@ -118,9 +123,9 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <TextBlock Text="{Binding DisplayText}" Foreground="#E6E6E6"/>
+                                            <TextBlock Text="{Binding DisplayText}"/>
                                         </StackPanel>
-                                        <TextBlock Grid.Column="1" Text="{Binding FormatId}" VerticalAlignment="Center" Foreground="#E6E6E6"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding FormatId}" VerticalAlignment="Center"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -129,11 +134,10 @@
 
                     <!-- 组合预览 -->
                     <StackPanel Grid.Row="2" Margin="8,4,8,8" Orientation="Horizontal">
-                        <TextBlock Text="组合: " VerticalAlignment="Center" Foreground="#B0B0B0"/>
+                        <TextBlock Text="组合: " Foreground="{StaticResource SubTextBrush}"/>
                         <TextBlock x:Name="CombinedFormatText"
                                    Text="选择视频和音频格式"
-                                   VerticalAlignment="Center"
-                                   Foreground="#569CD6"
+                                   Foreground="{StaticResource LinkBrush}"
                                    FontWeight="Bold"/>
                     </StackPanel>
                 </Grid>
