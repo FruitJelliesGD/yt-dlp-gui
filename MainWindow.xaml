@@ -104,6 +104,25 @@
             </Setter>
         </Style>
 
+        <!-- ComboBox -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{StaticResource InputBg}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource InputBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- CheckBox -->
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
         <!-- GridView 表头 -->
         <Style TargetType="GridViewColumnHeader">
             <Setter Property="Background" Value="{StaticResource HeaderBg}"/>
@@ -255,9 +274,9 @@
         <!-- 任务列表 -->
         <ListView Grid.Row="5"
           x:Name="TaskListView"
-          Background="#252526"
-          Foreground="#D4D4D4"
-          BorderBrush="#3C3C3C"
+          Background="{StaticResource ListBg}"
+          Foreground="{StaticResource TextBrush}"
+          BorderBrush="{StaticResource ListBorder}"
           BorderThickness="1">
 
                 <ListView.View>
@@ -329,13 +348,13 @@
                                     <StackPanel Orientation="Horizontal">
                                         <Button Content="⏸"
                                                 Width="28"
-                                                Height="24"
+                                                Height="32"
                                                 Margin="2"
                                                 Click="PauseButton_Click"
                                                 ToolTip="暂停/恢复"/>
                                         <Button Content="✕"
                                                 Width="28"
-                                                Height="24"
+                                                Height="32"
                                                 Margin="2"
                                                 Click="CancelButton_Click"
                                                 ToolTip="取消"/>
