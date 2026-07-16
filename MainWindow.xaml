@@ -169,7 +169,7 @@
     </Window.Resources>
 
     <!-- ================= 主布局 ================= -->
-    <Grid Margin="16">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -181,31 +181,31 @@
         </Grid.RowDefinitions>
 
         <!-- URL -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,12">
-            <TextBlock Text="视频链接 (URL)" FontWeight="Bold" Margin="0,0,0,6"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="视频链接 (URL)" FontWeight="Bold" Margin="0,0,0,8"/>
             <TextBox x:Name="UrlTextBox"/>
         </StackPanel>
 
         <!-- 保存路径 -->
-        <Grid Grid.Row="1" Margin="0,0,0,12">
+        <Grid Grid.Row="1" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="保存路径" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,8,0"/>
+            <TextBlock Text="保存路径" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
             <TextBox Grid.Column="1"
                      x:Name="PathTextBox"
                      IsReadOnly="True"/>
             <Button Grid.Column="2"
                     Content="选择文件夹"
-                    Margin="8,0,0,0"
+                    Margin="10,0,0,0"
                     Click="SelectPath_Click"/>
         </Grid>
 
         <!-- 格式 + Cookies -->
-        <Grid Grid.Row="2" Margin="0,0,0,12">
+        <Grid Grid.Row="2" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -214,19 +214,19 @@
             <local:FormatSelectorControl x:Name="FormatSelectorControl"
                                          Height="80"/>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12,0,0,0">
-                <TextBlock Text="Cookies" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,8,0"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0">
+                <TextBlock Text="Cookies" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
                 <TextBox x:Name="CookiesPathTextBox"
                          Width="200"
                          IsReadOnly="True"/>
                 <Button Content="选择文件"
-                        Margin="8,0,0,0"
+                        Margin="10,0,0,0"
                         Click="SelectCookies_Click"/>
             </StackPanel>
         </Grid>
 
         <!-- 操作按钮 -->
-        <Grid Grid.Row="3" Margin="0,0,0,12">
+        <Grid Grid.Row="3" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -236,7 +236,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Content="历史记录"
-                    Margin="0,0,8,0"
+                    Margin="0,0,10,0"
                     Click="History_Click">
                 <Button.ContextMenu>
                     <ContextMenu x:Name="HistoryContextMenu"/>
@@ -245,12 +245,12 @@
 
             <Button Grid.Column="1"
                     Content="查看可用格式 (-F)"
-                    Margin="0,0,8,0"
+                    Margin="0,0,10,0"
                     Click="CheckFormats_Click"/>
 
             <Button Grid.Column="2"
                     Content="高级选项"
-                    Margin="0,0,8,0"
+                    Margin="0,0,10,0"
                     Click="ToggleAdvancedOptions_Click"/>
 
             <Button Grid.Column="3"
@@ -261,7 +261,7 @@
         </Grid>
 
         <!-- 高级选项面板 -->
-        <Grid Grid.Row="4" Margin="0,0,0,12">
+        <Grid Grid.Row="4" Margin="0,0,0,16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
