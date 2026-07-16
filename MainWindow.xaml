@@ -245,17 +245,18 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <local:FormatSelectorControl x:Name="FormatSelectorControl"
-                                         Height="80"/>
+            <local:FormatSelectorControl x:Name="FormatSelectorControl"/>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0">
-                <TextBlock Text="Cookies" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
-                <TextBox x:Name="CookiesPathTextBox"
-                         Width="200"
-                         IsReadOnly="True"/>
-                <Button Content="选择文件"
-                        Margin="10,0,0,0"
-                        Click="SelectCookies_Click"/>
+            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="16,0,0,0">
+                <TextBlock Text="Cookies" FontWeight="Bold" Margin="0,0,0,8"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="CookiesPathTextBox"
+                             Width="200"
+                             IsReadOnly="True"/>
+                    <Button Content="选择文件"
+                            Margin="10,0,0,0"
+                            Click="SelectCookies_Click"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
 
