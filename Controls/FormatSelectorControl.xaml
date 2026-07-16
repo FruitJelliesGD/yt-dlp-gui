@@ -7,6 +7,12 @@
              d:DesignHeight="100" d:DesignWidth="400"
              Background="Transparent">
 
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="TextBrush" Color="#CCCCCC"/>
+        <SolidColorBrush x:Key="SubTextBrush" Color="#858585"/>
+        <SolidColorBrush x:Key="LinkBrush" Color="#3794FF"/>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
