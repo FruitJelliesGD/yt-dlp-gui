@@ -18,7 +18,7 @@
         <TabControl x:Name="OptionsTabControl" Background="Transparent" BorderThickness="0">
             
             <!-- 下载选项卡 -->
-            <TabItem Header="下载" Background="{StaticResource TabHeaderBg}">
+            <TabItem Header="下载" Background="#252526" Foreground="{StaticResource TextBrush}">
                 <Grid Background="{StaticResource TabContentBg}" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140"/>
@@ -79,7 +79,7 @@
             </TabItem>
 
             <!-- 网络选项卡 -->
-            <TabItem Header="网络" Background="{StaticResource TabHeaderBg}">
+            <TabItem Header="网络" Background="#252526" Foreground="{StaticResource TextBrush}">
                 <Grid Background="{StaticResource TabContentBg}" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140"/>
@@ -125,7 +125,7 @@
             </TabItem>
 
             <!-- 字幕选项卡 -->
-            <TabItem Header="字幕" Background="{StaticResource TabHeaderBg}">
+            <TabItem Header="字幕" Background="#252526" Foreground="{StaticResource TextBrush}">
                 <Grid Background="{StaticResource TabContentBg}" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140"/>
@@ -172,7 +172,7 @@
             </TabItem>
 
             <!-- 播放列表选项卡 -->
-            <TabItem Header="播放列表" Background="{StaticResource TabHeaderBg}">
+            <TabItem Header="播放列表" Background="#252526" Foreground="{StaticResource TextBrush}">
                 <Grid Background="{StaticResource TabContentBg}" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140"/>
@@ -223,7 +223,7 @@
             </TabItem>
 
             <!-- 后处理选项卡 -->
-            <TabItem Header="后处理" Background="{StaticResource TabHeaderBg}">
+            <TabItem Header="后处理" Background="#252526" Foreground="{StaticResource TextBrush}">
                 <Grid Background="{StaticResource TabContentBg}" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140"/>
@@ -262,7 +262,7 @@
             </TabItem>
 
             <!-- 认证选项卡 -->
-            <TabItem Header="认证" Background="{StaticResource TabHeaderBg}">
+            <TabItem Header="认证" Background="#252526" Foreground="{StaticResource TextBrush}">
                 <Grid Background="{StaticResource TabContentBg}" Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140"/>
@@ -323,7 +323,7 @@
             </TabItem>
 
             <!-- 自定义参数选项卡 -->
-            <TabItem Header="自定义参数" Background="{StaticResource TabHeaderBg}">
+            <TabItem Header="自定义参数" Background="#252526" Foreground="{StaticResource TextBrush}">
                 <Grid Background="{StaticResource TabContentBg}" Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
