@@ -8,8 +8,10 @@
         Title="yt-dlp-gui"
         Width="1000"
         Height="600"
+        MinWidth="800"
+        MinHeight="500"
         Background="#1E1E1E"
-        Foreground="#E6E6E6">
+        Foreground="{StaticResource TextBrush}">
 
     <!-- ================= 全局深色资源 ================= -->
     <Window.Resources>
@@ -18,11 +20,15 @@
         <SolidColorBrush x:Key="TextBrush" Color="#CCCCCC"/>
         <SolidColorBrush x:Key="SubTextBrush" Color="#858585"/>
         <SolidColorBrush x:Key="LinkBrush" Color="#3794FF"/>
+        <SolidColorBrush x:Key="SuccessBrush" Color="#4EC9B0"/>
+        <SolidColorBrush x:Key="WarningBrush" Color="#CCA700"/>
+        <SolidColorBrush x:Key="ErrorBrush" Color="#F14C4C"/>
 
         <!-- 输入框 -->
         <SolidColorBrush x:Key="InputBg" Color="#3C3C3C"/>
         <SolidColorBrush x:Key="InputBorder" Color="#555555"/>
         <SolidColorBrush x:Key="InputBorderHover" Color="#6E6E6E"/>
+        <SolidColorBrush x:Key="InputFocusBrush" Color="#007ACC"/>
 
         <!-- 按钮 -->
         <SolidColorBrush x:Key="BtnBg" Color="#0E639C"/>
@@ -31,16 +37,22 @@
         <SolidColorBrush x:Key="BtnBorder" Color="#007ACC"/>
         <SolidColorBrush x:Key="BtnSecondaryBg" Color="#3C3C3C"/>
         <SolidColorBrush x:Key="BtnSecondaryHover" Color="#4A4A4A"/>
+        <SolidColorBrush x:Key="BtnSuccessBg" Color="#2D4A2D"/>
+        <SolidColorBrush x:Key="BtnSuccessHover" Color="#3D6B3D"/>
 
         <!-- ListView -->
-        <SolidColorBrush x:Key="ListBg" Color="#252526"/>
+        <SolidColorBrush x:Key="ListBg" Color="#1E1E1E"/>
         <SolidColorBrush x:Key="ListBorder" Color="#3C3C3C"/>
         <SolidColorBrush x:Key="ListItemHover" Color="#2A2D2E"/>
         <SolidColorBrush x:Key="ListItemSelected" Color="#094771"/>
+        <SolidColorBrush x:Key="ListItemStriped" Color="#252526"/>
 
         <!-- 表头 -->
         <SolidColorBrush x:Key="HeaderBg" Color="#252526"/>
         <SolidColorBrush x:Key="HeaderBorder" Color="#3C3C3C"/>
+
+        <!-- 分隔线 -->
+        <SolidColorBrush x:Key="SeparatorBrush" Color="#3C3C3C"/>
 
         <!-- ================= 样式 ================= -->
 
@@ -64,6 +76,9 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="BorderBrush" Value="{StaticResource InputBorderHover}"/>
                 </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource InputFocusBrush}"/>
+                </Trigger>
             </Style.Triggers>
         </Style>
 
@@ -77,6 +92,7 @@
             <Setter Property="Height" Value="32"/>
             <Setter Property="Padding" Value="12,0"/>
             <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Normal"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -84,9 +100,11 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4">
+                                CornerRadius="4"
+                                SnapsToDevicePixels="True">
                             <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -121,6 +139,7 @@
             <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,4,0,4"/>
         </Style>
 
         <!-- GridView 表头 -->
@@ -129,7 +148,7 @@
             <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
             <Setter Property="BorderBrush" Value="{StaticResource HeaderBorder}"/>
             <Setter Property="BorderThickness" Value="0,0,1,1"/>
-            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Padding" Value="10,8"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
@@ -165,6 +184,21 @@
             </Setter>
         </Style>
 
+        <!-- ProgressBar -->
+        <Style TargetType="ProgressBar">
+            <Setter Property="Background" Value="{StaticResource InputBg}"/>
+            <Setter Property="Foreground" Value="{StaticResource BtnBg}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource InputBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="8"/>
+        </Style>
+
+        <!-- Separator -->
+        <Style TargetType="Separator">
+            <Setter Property="Background" Value="{StaticResource SeparatorBrush}"/>
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Margin" Value="0,8"/>
+        </Style>
 
     </Window.Resources>
 
